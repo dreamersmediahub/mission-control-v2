@@ -235,6 +235,30 @@ export function TheoCharacter() {
       message: "Perfect time for guitar practice! Your ADHD brain is in the optimal learning window right now 🧠🎸",
       type: 'tip',
       emoji: '⚡'
+    },
+    {
+      id: '37',
+      message: "YouTube balance check: 3 hours reality TV vs 15 minutes guitar tutorials. Time to flip that ratio, mate! 📺",
+      type: 'sassy',
+      emoji: '⚖️'
+    },
+    {
+      id: '38',
+      message: "JustinGuitar posted a new video 2 hours ago. Stop watching RHOBH drama and learn some actual chords! 🎸",
+      type: 'warning',
+      emoji: '🎵'
+    },
+    {
+      id: '39',
+      message: "Focus Mode activated! Reality TV channels are hidden. Time to channel that scrolling energy into skill building 🎯",
+      type: 'encouraging',
+      emoji: '🔥'
+    },
+    {
+      id: '40',
+      message: "Your learning streak is 3 days strong! Keep watching those guitar tutorials and you'll be Ed Sheeran in no time ✨",
+      type: 'celebration',
+      emoji: '🎶'
     }
   ]
 

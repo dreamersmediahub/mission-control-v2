@@ -27,6 +27,7 @@ import { AIAssistant } from '@/components/dashboard/AIAssistant'
 import { PredictiveAnalytics } from '@/components/dashboard/PredictiveAnalytics'
 import { AutomationHub } from '@/components/dashboard/AutomationHub'
 import { MusicStudio } from '@/components/dashboard/MusicStudio'
+import { YouTubeIntegration } from '@/components/dashboard/YouTubeIntegration'
 import { LiveNotifications } from '@/components/dashboard/LiveNotifications'
 import { ParticleBackground } from '@/components/ui/ParticleBackground'
 import { GlitchText } from '@/components/ui/GlitchText'
@@ -276,10 +277,11 @@ export default function Dashboard() {
         </div>
 
         {/* AI REVOLUTION - Row 4 */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
           <AIAssistant />
           <PredictiveAnalytics />
           <AutomationHub />
+          <YouTubeIntegration />
         </div>
 
         {/* Main Content Grid */}
