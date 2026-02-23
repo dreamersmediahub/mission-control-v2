@@ -127,6 +127,18 @@ export function TheoCharacter() {
       message: "Salt Lake City chaos level: Whitney. Need I say more? ⛷️ Check that drama tracker!",
       type: 'celebration',
       emoji: '🔥'
+    },
+    {
+      id: '19',
+      message: "Twitter's going mental about tonight's Traitors episode. Check the feed, it's chaos! 🐦",
+      type: 'encouraging',
+      emoji: '📱'
+    },
+    {
+      id: '20',
+      message: "The Twitter girlies are DRAGGING Kyle Richards and honestly? They're not wrong 💅 #RHOBH",
+      type: 'sassy',
+      emoji: '🔥'
     }
   ]
 

@@ -13,6 +13,7 @@ import { VibeCheck } from '@/components/dashboard/VibeCheck'
 import { ManifestationTracker } from '@/components/dashboard/ManifestationTracker'
 import { IrishTimeWidget } from '@/components/dashboard/IrishTimeWidget'
 import { RealHousewivesTracker } from '@/components/dashboard/RealHousewivesTracker'
+import { TwitterFeed } from '@/components/dashboard/TwitterFeed'
 import { ADHDHyperfocusTimer } from '@/components/dashboard/ADHDHyperfocusTimer'
 import { CreativeEnergyHub } from '@/components/dashboard/CreativeEnergyHub'
 import { SpotifyVibePlayer } from '@/components/dashboard/SpotifyVibePlayer'
@@ -249,8 +250,9 @@ export default function Dashboard() {
         </div>
 
         {/* Kyle's MEGA Widgets - Row 2 */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
           <RealHousewivesTracker />
+          <TwitterFeed />
           <ADHDHyperfocusTimer />
           <CreativeEnergyHub />
           <SpotifyVibePlayer />
