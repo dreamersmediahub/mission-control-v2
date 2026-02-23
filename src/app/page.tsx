@@ -8,6 +8,13 @@ import { StatsCard } from '@/components/dashboard/StatsCard'
 import { AgentStatus } from '@/components/dashboard/AgentStatus'
 import { TaskList } from '@/components/dashboard/TaskList'
 import { QuickActions } from '@/components/dashboard/QuickActions'
+import { VibeCheck } from '@/components/dashboard/VibeCheck'
+import { ManifestationTracker } from '@/components/dashboard/ManifestationTracker'
+import { IrishTimeWidget } from '@/components/dashboard/IrishTimeWidget'
+import { RealHousewivesTracker } from '@/components/dashboard/RealHousewivesTracker'
+import { ADHDHyperfocusTimer } from '@/components/dashboard/ADHDHyperfocusTimer'
+import { CreativeEnergyHub } from '@/components/dashboard/CreativeEnergyHub'
+import { SpotifyVibePlayer } from '@/components/dashboard/SpotifyVibePlayer'
 import { getGreeting } from '@/lib/utils'
 import { 
   CheckCircle2, 
@@ -137,6 +144,21 @@ export default function Dashboard() {
             icon={Zap}
             color="success"
           />
+        </div>
+
+        {/* Kyle's Special Widgets - Row 1 */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <VibeCheck />
+          <IrishTimeWidget />
+          <ManifestationTracker />
+        </div>
+
+        {/* Kyle's MEGA Widgets - Row 2 */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+          <RealHousewivesTracker />
+          <ADHDHyperfocusTimer />
+          <CreativeEnergyHub />
+          <SpotifyVibePlayer />
         </div>
 
         {/* Main Content Grid */}

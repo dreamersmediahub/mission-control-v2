@@ -7,7 +7,7 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-surface-hover;
   }
   body {
     @apply bg-background text-text-primary font-sans antialiased;
