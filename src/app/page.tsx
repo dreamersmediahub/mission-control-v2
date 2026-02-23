@@ -15,6 +15,10 @@ import { RealHousewivesTracker } from '@/components/dashboard/RealHousewivesTrac
 import { ADHDHyperfocusTimer } from '@/components/dashboard/ADHDHyperfocusTimer'
 import { CreativeEnergyHub } from '@/components/dashboard/CreativeEnergyHub'
 import { SpotifyVibePlayer } from '@/components/dashboard/SpotifyVibePlayer'
+import { EmailIntelligence } from '@/components/dashboard/EmailIntelligence'
+import { SocialMediaCommand } from '@/components/dashboard/SocialMediaCommand'
+import { CalendarAI } from '@/components/dashboard/CalendarAI'
+import { BusinessIntelligence } from '@/components/dashboard/BusinessIntelligence'
 import { getGreeting } from '@/lib/utils'
 import { 
   CheckCircle2, 
@@ -159,6 +163,14 @@ export default function Dashboard() {
           <ADHDHyperfocusTimer />
           <CreativeEnergyHub />
           <SpotifyVibePlayer />
+        </div>
+
+        {/* ULTIMATE Business & Productivity Suite - Row 3 */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+          <EmailIntelligence />
+          <SocialMediaCommand />
+          <CalendarAI />
+          <BusinessIntelligence />
         </div>
 
         {/* Main Content Grid */}
