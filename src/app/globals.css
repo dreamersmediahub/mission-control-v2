@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-text-primary font-sans antialiased;
+  }
+  html {
+    @apply scroll-smooth;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-surface/80 backdrop-blur-sm border border-surface-hover/50;
+  }
+  
+  .card {
+    @apply glass rounded-lg p-6 transition-all duration-200 hover:bg-surface-hover/80;
+  }
+  
+  .btn-primary {
+    @apply bg-gold text-primary font-semibold px-4 py-2 rounded-md transition-all duration-200 hover:bg-gold/90 hover:scale-105 active:scale-95;
+  }
+  
+  .btn-secondary {
+    @apply bg-surface border border-surface-hover text-text-primary font-semibold px-4 py-2 rounded-md transition-all duration-200 hover:bg-surface-hover hover:scale-105 active:scale-95;
+  }
+  
+  .input {
+    @apply bg-surface border border-surface-hover rounded-md px-3 py-2 text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold/50 transition-all duration-200;
+  }
+  
+  .status-dot {
+    @apply w-2 h-2 rounded-full animate-pulse;
+  }
+  
+  .status-online {
+    @apply bg-success;
+  }
+  
+  .status-busy {
+    @apply bg-warning;
+  }
+  
+  .status-offline {
+    @apply bg-error;
+  }
+  
+  .progress-bar {
+    @apply w-full bg-surface rounded-full h-2;
+  }
+  
+  .progress-fill {
+    @apply h-2 bg-gradient-to-r from-gold to-gold/80 rounded-full transition-all duration-500 ease-out;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3a;
+}
+
+/* Loading animations */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.loading-shimmer {
+  background: linear-gradient(90deg, #1a1a1a 0px, #2a2a2a 40px, #1a1a1a 80px);
+  background-size: 200px;
+  animation: shimmer 1s infinite linear;
+}
