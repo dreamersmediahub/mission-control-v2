@@ -28,6 +28,7 @@ import { NeonButton } from '@/components/ui/NeonButton'
 import { CyberGrid } from '@/components/ui/CyberGrid'
 import { MatrixRain } from '@/components/ui/MatrixRain'
 import { FloatingActions } from '@/components/ui/FloatingActions'
+import { TheoCharacter } from '@/components/ui/TheoCharacter'
 import { getGreeting } from '@/lib/utils'
 import { 
   CheckCircle2, 
@@ -356,6 +357,9 @@ export default function Dashboard() {
       
       {/* Floating actions */}
       <FloatingActions />
+      
+      {/* Theo Character - The Digital Conscience */}
+      <TheoCharacter />
       </div>
     </Layout>
   )
