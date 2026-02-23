@@ -139,6 +139,24 @@ export function TheoCharacter() {
       message: "The Twitter girlies are DRAGGING Kyle Richards and honestly? They're not wrong 💅 #RHOBH",
       type: 'sassy',
       emoji: '🔥'
+    },
+    {
+      id: '21',
+      message: "Mate, when's the last time you called Nana Rose? Check that birthday calendar! 👵🏻💕",
+      type: 'encouraging',
+      emoji: '📞'
+    },
+    {
+      id: '22',
+      message: "Josh's birthday is coming up and 'sorry babe, forgot' isn't gonna cut it this time! 🎂",
+      type: 'warning',
+      emoji: '⚠️'
+    },
+    {
+      id: '23',
+      message: "Birthday alert! Time to actually use those gift ideas instead of panic-buying at the last minute 🎁",
+      type: 'tip',
+      emoji: '💡'
     }
   ]
 
@@ -180,6 +198,31 @@ export function TheoCharacter() {
         message: `${stats.pendingInvoices} pending invoices, Kyle. Chase that money or I'll do it for you... and I won't be nice about it 😈`,
         type: 'warning',
         emoji: '💸'
+      }
+    }
+    
+    // Check for upcoming birthdays (simulate birthday widget data)
+    const currentDate = new Date()
+    const currentMonth = currentDate.getMonth() + 1
+    const currentDay = currentDate.getDate()
+    
+    // Nana Rose's birthday: August 15th (critical reminder)
+    if (currentMonth === 8 && currentDay >= 10 && currentDay <= 14) {
+      return {
+        id: 'context-nana-birthday',
+        message: "Nana Rose's birthday is in a few days! Don't you dare forget the woman who calls you every morning 👵🏻💕",
+        type: 'warning',
+        emoji: '🎂'
+      }
+    }
+    
+    // Josh's birthday: November 8th
+    if (currentMonth === 11 && currentDay >= 3 && currentDay <= 7) {
+      return {
+        id: 'context-josh-birthday', 
+        message: "Josh's birthday is coming up! Your fiancé deserves better than last-minute panic shopping 💍",
+        type: 'warning',
+        emoji: '🎁'
       }
     }
     
