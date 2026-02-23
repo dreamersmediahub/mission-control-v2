@@ -3,6 +3,13 @@
 import { useState } from 'react'
 import { Brain, Zap, Coffee, Sparkles, Moon, Sun } from 'lucide-react'
 
+interface VibeType {
+  emoji: string
+  label: string
+  color: string
+  energy: number
+}
+
 export function VibeCheck() {
   const [currentMood, setCurrentMood] = useState<string>('')
   const [energyLevel, setEnergyLevel] = useState(7)
@@ -19,8 +26,8 @@ export function VibeCheck() {
     { emoji: '🌧️', label: 'Off Day', color: 'from-gray-600 to-gray-800', energy: 2 }
   ]
 
-  const getVibeRecommendation = (vibe: any) => {
-    const recommendations = {
+  const getVibeRecommendation = (vibe: VibeType) => {
+    const recommendations: { [key: string]: string[] } = {
       '🔥': ['Tackle your biggest project', 'Record content', 'Make important decisions'],
       '🚀': ['Deep work session', 'Handle complex tasks', 'Strategic planning'],
       '✨': ['Create content', 'Design work', 'Brainstorm ideas'],
@@ -34,7 +41,7 @@ export function VibeCheck() {
     return recommendations[vibe.emoji] || ['Take it easy']
   }
 
-  const handleVibeSelect = (vibe: any) => {
+  const handleVibeSelect = (vibe: VibeType) => {
     setCurrentMood(vibe.label)
     setEnergyLevel(vibe.energy)
     // TODO: Save to health tracking and adjust daily priorities
@@ -93,12 +100,15 @@ export function VibeCheck() {
         <div className="border-t border-surface-hover pt-4">
           <p className="text-sm font-medium text-text-primary mb-2">Recommended for this vibe:</p>
           <div className="space-y-1">
-            {getVibeRecommendation(vibes.find(v => v.label === currentMood))?.map((rec, index) => (
-              <div key={index} className="flex items-center space-x-2 text-sm text-text-secondary">
-                <div className="w-1 h-1 bg-gold rounded-full"></div>
-                <span>{rec}</span>
-              </div>
-            ))}
+            {(() => {
+              const selectedVibe = vibes.find(v => v.label === currentMood);
+              return selectedVibe ? getVibeRecommendation(selectedVibe)?.map((rec, index) => (
+                <div key={index} className="flex items-center space-x-2 text-sm text-text-secondary">
+                  <div className="w-1 h-1 bg-gold rounded-full"></div>
+                  <span>{rec}</span>
+                </div>
+              )) : null;
+            })()}
           </div>
         </div>
       )}

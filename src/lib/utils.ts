@@ -76,7 +76,7 @@ export function getPriorityColor(priority: 'low' | 'medium' | 'high' | 'urgent')
 }
 
 export function getStatusColor(status: string): string {
-  const statusColors = {
+  const statusColors: { [key: string]: string } = {
     completed: 'text-success',
     'in-progress': 'text-warning',
     pending: 'text-info',

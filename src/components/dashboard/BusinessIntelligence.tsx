@@ -290,3 +290,5 @@ export function BusinessIntelligence() {
         <button className="btn-secondary text-sm">Client Analysis</button>
       </div>
     </div>
+  )
+}

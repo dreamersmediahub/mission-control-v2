@@ -10,7 +10,7 @@ interface StatsCardProps {
     trend: 'up' | 'down'
   }
   icon: LucideIcon
-  color?: string
+  color?: 'gold' | 'success' | 'warning' | 'error' | 'info'
 }
 
 export function StatsCard({ title, value, change, icon: Icon, color = 'gold' }: StatsCardProps) {
