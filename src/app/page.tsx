@@ -21,6 +21,13 @@ import { SocialMediaCommand } from '@/components/dashboard/SocialMediaCommand'
 import { CalendarAI } from '@/components/dashboard/CalendarAI'
 import { BusinessIntelligence } from '@/components/dashboard/BusinessIntelligence'
 import { LiveNotifications } from '@/components/dashboard/LiveNotifications'
+import { ParticleBackground } from '@/components/ui/ParticleBackground'
+import { GlitchText } from '@/components/ui/GlitchText'
+import { HologramCard } from '@/components/ui/HologramCard'
+import { NeonButton } from '@/components/ui/NeonButton'
+import { CyberGrid } from '@/components/ui/CyberGrid'
+import { MatrixRain } from '@/components/ui/MatrixRain'
+import { FloatingActions } from '@/components/ui/FloatingActions'
 import { getGreeting } from '@/lib/utils'
 import { 
   CheckCircle2, 
@@ -97,10 +104,44 @@ export default function Dashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-gold/20 border-t-gold rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-text-secondary">Loading Mission Control...</p>
+      <div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden">
+        <ParticleBackground />
+        <CyberGrid />
+        <MatrixRain />
+        
+        <div className="text-center relative z-10">
+          <div className="mb-8">
+            <div className="text-6xl mb-4 animate-float">🎯</div>
+            <GlitchText 
+              text="MISSION CONTROL" 
+              className="text-4xl font-bold neon-text mb-2" 
+              glitchIntensity={0.3}
+            />
+            <p className="text-text-secondary text-lg">
+              <span className="animate-pulse">Initializing systems...</span>
+            </p>
+          </div>
+          
+          <div className="space-y-4">
+            <div className="w-64 h-2 bg-surface rounded-full mx-auto overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-gold via-blue-400 to-gold animate-pulse"></div>
+            </div>
+            
+            <div className="flex justify-center space-x-4 text-sm text-text-muted">
+              <span className="flex items-center space-x-1">
+                <div className="w-2 h-2 bg-success rounded-full animate-pulse"></div>
+                <span>Agents Online</span>
+              </span>
+              <span className="flex items-center space-x-1">
+                <div className="w-2 h-2 bg-warning rounded-full animate-pulse"></div>
+                <span>Live Data Active</span>
+              </span>
+              <span className="flex items-center space-x-1">
+                <div className="w-2 h-2 bg-info rounded-full animate-pulse"></div>
+                <span>Systems Ready</span>
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -108,16 +149,25 @@ export default function Dashboard() {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background relative">
+      {/* Animated Backgrounds */}
+      <ParticleBackground />
+      <CyberGrid />
+      <MatrixRain />
+      
       {/* Header */}
-      <header className="glass border-b border-surface-hover/50 sticky top-0 z-50">
+      <header className="glass border-b border-surface-hover/50 sticky top-0 z-50 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <div className="text-2xl">🎯</div>
+              <div className="text-2xl animate-spin-slow">🎯</div>
               <div>
-                <h1 className="text-xl font-bold text-text-primary">Mission Control</h1>
-                <p className="text-sm text-text-secondary">Dreamers Media Command Center</p>
+                <h1 className="text-xl font-bold text-text-primary">
+                  <GlitchText text="Mission Control" className="text-xl font-bold" />
+                </h1>
+                <p className="text-sm text-text-secondary">
+                  <span className="text-gold animate-pulse">●</span> Dreamers Media Command Center
+                </p>
               </div>
             </div>
             
@@ -151,35 +201,43 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <StatsCard
-            title="Tasks Complete"
-            value={`${completionRate}%`}
-            change={{ value: 12, trend: 'up' }}
-            icon={CheckCircle2}
-            color="success"
-          />
-          <StatsCard
-            title="Monthly Revenue"
-            value={`$${(stats.monthlyRevenue / 1000).toFixed(1)}K`}
-            change={{ value: 8, trend: 'up' }}
-            icon={DollarSign}
-            color="gold"
-          />
-          <StatsCard
-            title="Active Projects"
-            value={stats.activeProjects}
-            icon={Users}
-            color="info"
-          />
-          <StatsCard
-            title="Agents Online"
-            value={`${stats.agentsOnline}/${agents.length}`}
-            icon={Zap}
-            color="success"
-          />
+          <HologramCard intensity={0.8}>
+            <StatsCard
+              title="Tasks Complete"
+              value={`${completionRate}%`}
+              change={{ value: 12, trend: 'up' }}
+              icon={CheckCircle2}
+              color="success"
+            />
+          </HologramCard>
+          <HologramCard intensity={0.8}>
+            <StatsCard
+              title="Monthly Revenue"
+              value={`$${(stats.monthlyRevenue / 1000).toFixed(1)}K`}
+              change={{ value: 8, trend: 'up' }}
+              icon={DollarSign}
+              color="gold"
+            />
+          </HologramCard>
+          <HologramCard intensity={0.8}>
+            <StatsCard
+              title="Active Projects"
+              value={stats.activeProjects}
+              icon={Users}
+              color="info"
+            />
+          </HologramCard>
+          <HologramCard intensity={0.8}>
+            <StatsCard
+              title="Agents Online"
+              value={`${stats.agentsOnline}/${agents.length}`}
+              icon={Zap}
+              color="success"
+            />
+          </HologramCard>
         </div>
 
         {/* Kyle's Special Widgets - Row 1 */}
@@ -295,6 +353,9 @@ export default function Dashboard() {
       
       {/* Live notifications overlay */}
       <LiveNotifications />
+      
+      {/* Floating actions */}
+      <FloatingActions />
       </div>
     </Layout>
   )

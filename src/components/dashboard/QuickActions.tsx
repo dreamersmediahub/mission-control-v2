@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Zap, MessageCircle, Plus, Calendar, AlertTriangle } from 'lucide-react'
+import { NeonButton } from '@/components/ui/NeonButton'
 
 interface QuickAction {
   id: string

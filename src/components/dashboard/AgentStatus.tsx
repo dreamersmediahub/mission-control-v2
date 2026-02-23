@@ -1,6 +1,7 @@
 'use client'
 
 import { Agent } from '@/types'
+import { HologramCard } from '@/components/ui/HologramCard'
 import { formatDistanceToNow } from '@/lib/utils'
 
 interface AgentStatusProps {
