@@ -137,7 +137,7 @@ export function BirthdayCalendar() {
   }
 
   useEffect(() => {
-    const upcoming = birthdays
+    const upcoming = (birthdays || [])
       .map(person => ({
         ...person,
         daysUntil: calculateDaysUntil(person.birthday)

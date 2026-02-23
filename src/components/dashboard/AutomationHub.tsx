@@ -194,11 +194,11 @@ export function AutomationHub() {
   }
 
   const filteredAutomations = filter === 'all' 
-    ? automations 
-    : automations.filter(a => a.category === filter)
+    ? (automations || [])
+    : (automations || []).filter(a => a.category === filter)
 
-  const activeCount = automations.filter(a => a.status === 'active').length
-  const totalImpact = automations.filter(a => a.status === 'active').length
+  const activeCount = (automations || []).filter(a => a.status === 'active').length
+  const totalImpact = (automations || []).filter(a => a.status === 'active').length
 
   return (
     <div className="card">

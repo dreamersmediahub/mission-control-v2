@@ -65,11 +65,11 @@ export function YouTubeIntegration() {
   ]
 
   useEffect(() => {
-    const totalTime = todaysSessions.reduce((acc, session) => acc + session.duration, 0)
-    const learning = todaysSessions
+    const totalTime = (todaysSessions || []).reduce((acc, session) => acc + session.duration, 0)
+    const learning = (todaysSessions || [])
       .filter(s => s.type === 'learning' || s.type === 'business')
       .reduce((acc, s) => acc + s.duration, 0)
-    const entertainment = todaysSessions
+    const entertainment = (todaysSessions || [])
       .filter(s => s.type === 'entertainment')
       .reduce((acc, s) => acc + s.duration, 0)
 

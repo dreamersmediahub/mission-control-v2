@@ -107,8 +107,8 @@ export default function Dashboard() {
     }
   }, [liveTasks, tasksLoading, setTodayTasks])
 
-  const completionRate = stats.totalTasks > 0 
-    ? Math.round((stats.completedTasks / stats.totalTasks) * 100) 
+  const completionRate = (stats?.totalTasks || 0) > 0 
+    ? Math.round(((stats?.completedTasks || 0) / (stats?.totalTasks || 1)) * 100) 
     : 0
 
   if (isLoading) {
@@ -225,7 +225,7 @@ export default function Dashboard() {
           <HologramCard intensity={0.8}>
             <StatsCard
               title="Monthly Revenue"
-              value={`$${(stats.monthlyRevenue / 1000).toFixed(1)}K`}
+              value={`$${((stats?.monthlyRevenue || 0) / 1000).toFixed(1)}K`}
               change={{ value: 8, trend: 'up' }}
               icon={DollarSign}
               color="gold"
@@ -234,7 +234,7 @@ export default function Dashboard() {
           <HologramCard intensity={0.8}>
             <StatsCard
               title="Active Projects"
-              value={stats.activeProjects}
+              value={stats?.activeProjects || 0}
               icon={Users}
               color="info"
             />
@@ -242,7 +242,7 @@ export default function Dashboard() {
           <HologramCard intensity={0.8}>
             <StatsCard
               title="Agents Online"
-              value={`${stats.agentsOnline}/${agents.length}`}
+              value={`${stats?.agentsOnline || 0}/${(agents || []).length}`}
               icon={Zap}
               color="success"
             />
