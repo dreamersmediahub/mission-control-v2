@@ -181,6 +181,30 @@ export function TheoCharacter() {
       message: "Your Gemini moon wants variety and your Scorpio sun wants depth. Embrace the beautiful chaos, Kyle! ♊♏",
       type: 'encouraging',
       emoji: '✨'
+    },
+    {
+      id: '28',
+      message: "AI predicts 50% revenue growth this month! Your neural network is working overtime, mate 🤖",
+      type: 'celebration',
+      emoji: '📈'
+    },
+    {
+      id: '29',
+      message: "7 automations running smoothly! This is what peak efficiency looks like when you let AI do the heavy lifting ⚡",
+      type: 'encouraging',
+      emoji: '🤖'
+    },
+    {
+      id: '30',
+      message: "Voice command ready! Just say 'Hey Theo, show me Krissy's status' and watch the magic happen 🎤",
+      type: 'tip',
+      emoji: '🔮'
+    },
+    {
+      id: '31',
+      message: "AI detected anomaly: You haven't taken a break in 3 hours. The ADHD enforcer is coming for you! 🧠",
+      type: 'warning',
+      emoji: '⚠️'
     }
   ]
 
