@@ -205,6 +205,36 @@ export function TheoCharacter() {
       message: "AI detected anomaly: You haven't taken a break in 3 hours. The ADHD enforcer is coming for you! 🧠",
       type: 'warning',
       emoji: '⚠️'
+    },
+    {
+      id: '32',
+      message: "Haven't practiced guitar in 2 days, Kyle! Those Wonderwall chord transitions won't learn themselves 🎸",
+      type: 'sassy',
+      emoji: '🎵'
+    },
+    {
+      id: '33',
+      message: "5-day practice streak going strong! Keep it up and you'll be serenading Josh in no time 🎤💕",
+      type: 'celebration',
+      emoji: '🎶'
+    },
+    {
+      id: '34',
+      message: "Time for some vocal warm-ups? Your C3-G5 range isn't going to expand itself, mate! 🎤",
+      type: 'encouraging',
+      emoji: '🎵'
+    },
+    {
+      id: '35',
+      message: "Just watched 45 minutes of JustinGuitar and 2 hours of RHOBH compilations... priorities, Kyle? 😏",
+      type: 'sassy',
+      emoji: '📱'
+    },
+    {
+      id: '36',
+      message: "Perfect time for guitar practice! Your ADHD brain is in the optimal learning window right now 🧠🎸",
+      type: 'tip',
+      emoji: '⚡'
     }
   ]
 

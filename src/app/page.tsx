@@ -26,6 +26,7 @@ import { BusinessIntelligence } from '@/components/dashboard/BusinessIntelligenc
 import { AIAssistant } from '@/components/dashboard/AIAssistant'
 import { PredictiveAnalytics } from '@/components/dashboard/PredictiveAnalytics'
 import { AutomationHub } from '@/components/dashboard/AutomationHub'
+import { MusicStudio } from '@/components/dashboard/MusicStudio'
 import { LiveNotifications } from '@/components/dashboard/LiveNotifications'
 import { ParticleBackground } from '@/components/ui/ParticleBackground'
 import { GlitchText } from '@/components/ui/GlitchText'
@@ -256,10 +257,11 @@ export default function Dashboard() {
         </div>
 
         {/* Kyle's MEGA Widgets - Row 2 */}
-        <div className="grid grid-cols-1 lg:grid-cols-6 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-7 gap-6 mb-8">
           <RealHousewivesTracker />
           <TwitterFeed />
           <BirthdayCalendar />
+          <MusicStudio />
           <ADHDHyperfocusTimer />
           <CreativeEnergyHub />
           <SpotifyVibePlayer />
