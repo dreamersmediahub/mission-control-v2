@@ -3,7 +3,8 @@
 import { useEffect } from 'react'
 import { Layout } from '@/components/Layout'
 import { useDashboardStore } from '@/stores/dashboard'
-import { mockAgents, mockStats, mockTodayTasks, mockTodayEvents, mockWeather } from '@/lib/mock-data'
+import { mockTodayEvents, mockWeather } from '@/lib/mock-data'
+import { useLiveStats, useLiveAgents, useLiveTasks, useRealTimeNotifications } from '@/hooks/useLiveData'
 import { StatsCard } from '@/components/dashboard/StatsCard'
 import { AgentStatus } from '@/components/dashboard/AgentStatus'
 import { TaskList } from '@/components/dashboard/TaskList'
@@ -19,6 +20,7 @@ import { EmailIntelligence } from '@/components/dashboard/EmailIntelligence'
 import { SocialMediaCommand } from '@/components/dashboard/SocialMediaCommand'
 import { CalendarAI } from '@/components/dashboard/CalendarAI'
 import { BusinessIntelligence } from '@/components/dashboard/BusinessIntelligence'
+import { LiveNotifications } from '@/components/dashboard/LiveNotifications'
 import { getGreeting } from '@/lib/utils'
 import { 
   CheckCircle2, 
@@ -48,24 +50,46 @@ export default function Dashboard() {
     setLoading 
   } = useDashboardStore()
 
-  // Load mock data on component mount
+  // Live data hooks
+  const { data: liveStats, loading: statsLoading, lastUpdated: statsUpdated } = useLiveStats()
+  const { data: liveAgents, loading: agentsLoading } = useLiveAgents()
+  const { data: liveTasks, loading: tasksLoading } = useLiveTasks()
+  const { notifications, dismissNotification } = useRealTimeNotifications()
+
+  // Load live data on component mount
   useEffect(() => {
     const loadData = async () => {
       setLoading(true)
       
-      // Simulate API calls with delays
-      setTimeout(() => {
-        setStats(mockStats)
-        setAgents(mockAgents)
-        setTodayTasks(mockTodayTasks)
-        setTodayEvents(mockTodayEvents)
-        setWeather(mockWeather)
-        setLoading(false)
-      }, 1000)
+      // Set initial events and weather (non-live for now)
+      setTodayEvents(mockTodayEvents)
+      setWeather(mockWeather)
+      setLoading(false)
+      
+      console.log('🔴 Mission Control: Live data streams active!')
     }
 
     loadData()
-  }, [setStats, setAgents, setTodayTasks, setTodayEvents, setWeather, setLoading])
+  }, [setTodayEvents, setWeather, setLoading])
+
+  // Update store with live data when available
+  useEffect(() => {
+    if (liveStats && !statsLoading) {
+      setStats(liveStats)
+    }
+  }, [liveStats, statsLoading, setStats])
+
+  useEffect(() => {
+    if (liveAgents && !agentsLoading) {
+      setAgents(liveAgents)
+    }
+  }, [liveAgents, agentsLoading, setAgents])
+
+  useEffect(() => {
+    if (liveTasks && !tasksLoading) {
+      setTodayTasks(liveTasks)
+    }
+  }, [liveTasks, tasksLoading, setTodayTasks])
 
   const completionRate = stats.totalTasks > 0 
     ? Math.round((stats.completedTasks / stats.totalTasks) * 100) 
@@ -98,6 +122,14 @@ export default function Dashboard() {
             </div>
             
             <div className="flex items-center space-x-4">
+              {statsUpdated && (
+                <div className="flex items-center space-x-1 text-xs px-2 py-1 bg-success/20 rounded-full">
+                  <div className="w-2 h-2 bg-success rounded-full animate-pulse"></div>
+                  <span className="text-success">
+                    Live
+                  </span>
+                </div>
+              )}
               <div className="text-right">
                 <p className="text-sm font-medium text-text-primary">
                   {getGreeting()}, Kyle
@@ -260,6 +292,9 @@ export default function Dashboard() {
           </p>
         </div>
       </main>
+      
+      {/* Live notifications overlay */}
+      <LiveNotifications />
       </div>
     </Layout>
   )
