@@ -157,6 +157,30 @@ export function TheoCharacter() {
       message: "Birthday alert! Time to actually use those gift ideas instead of panic-buying at the last minute 🎁",
       type: 'tip',
       emoji: '💡'
+    },
+    {
+      id: '24',
+      message: "Your Scorpio energy is through the roof today! Channel that intensity into crushing your business goals ♏",
+      type: 'encouraging',
+      emoji: '🔥'
+    },
+    {
+      id: '25',
+      message: "Full Scorpio mode activated! Trust your intuition - it's literally never wrong, you stubborn water sign 🦂",
+      type: 'sassy',
+      emoji: '♏'
+    },
+    {
+      id: '26',
+      message: "Mars is supporting your entrepreneurial drive today. Perfect time to chase those invoices with Scorpio determination!",
+      type: 'tip',
+      emoji: '🎯'
+    },
+    {
+      id: '27',
+      message: "Your Gemini moon wants variety and your Scorpio sun wants depth. Embrace the beautiful chaos, Kyle! ♊♏",
+      type: 'encouraging',
+      emoji: '✨'
     }
   ]
 

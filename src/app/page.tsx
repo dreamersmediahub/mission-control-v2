@@ -15,6 +15,7 @@ import { IrishTimeWidget } from '@/components/dashboard/IrishTimeWidget'
 import { RealHousewivesTracker } from '@/components/dashboard/RealHousewivesTracker'
 import { TwitterFeed } from '@/components/dashboard/TwitterFeed'
 import { BirthdayCalendar } from '@/components/dashboard/BirthdayCalendar'
+import { AstrologySection } from '@/components/dashboard/AstrologySection'
 import { ADHDHyperfocusTimer } from '@/components/dashboard/ADHDHyperfocusTimer'
 import { CreativeEnergyHub } from '@/components/dashboard/CreativeEnergyHub'
 import { SpotifyVibePlayer } from '@/components/dashboard/SpotifyVibePlayer'
@@ -244,10 +245,11 @@ export default function Dashboard() {
         </div>
 
         {/* Kyle's Special Widgets - Row 1 */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
           <VibeCheck />
           <IrishTimeWidget />
           <ManifestationTracker />
+          <AstrologySection />
         </div>
 
         {/* Kyle's MEGA Widgets - Row 2 */}
