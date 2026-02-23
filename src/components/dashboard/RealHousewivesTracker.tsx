@@ -5,49 +5,49 @@ import { Play, Star, Crown, Drama, Flame } from 'lucide-react'
 
 export function RealHousewivesTracker() {
   const [currentlyWatching] = useState({
-    series: 'RHOBH',
-    season: 13,
-    episode: 8,
-    title: 'Crystal\'s Revelations',
-    dramaLevel: 9,
-    lastWatched: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)
+    series: 'RHOSLC',
+    season: 5,
+    episode: 3,
+    title: 'Whitney\'s Web of Lies',
+    dramaLevel: 10,
+    lastWatched: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000)
   })
 
   const watchlist = [
     {
-      series: 'RHOBH',
-      season: 13,
-      episodesLeft: 5,
-      dramaScore: 9.2,
-      currentDrama: 'Kyle Richards family drama + Dorit\'s marriage',
-      icon: '💎',
+      series: 'RHOSLC',
+      season: 5,
+      episodesLeft: 8,
+      dramaScore: 9.8,
+      currentDrama: 'Whitney vs. Heather AGAIN + Mary M. Cosby chaos',
+      icon: '⛷️',
       priority: 'high'
     },
     {
-      series: 'RHOSLC',
-      season: 4,
-      episodesLeft: 3,
-      dramaScore: 8.8,
-      currentDrama: 'Monica\'s bombshells + Jen Shah fallout continues',
-      icon: '🏔️',
-      priority: 'medium'
+      series: 'Traitors US',
+      season: 3,
+      episodesLeft: 12,
+      dramaScore: 9.5,
+      currentDrama: 'Round table betrayals + castle mind games',
+      icon: '🏰',
+      priority: 'high'
     },
     {
-      series: 'MAFS Australia',
-      season: 11,
-      episodesLeft: 12,
-      dramaScore: 7.5,
-      currentDrama: 'Commitment ceremony chaos',
-      icon: '💍',
-      priority: 'low'
+      series: 'RHOBH',
+      season: 14,
+      episodesLeft: 15,
+      dramaScore: 8.7,
+      currentDrama: 'Kyle & Dorit friendship implosion + Crystal stirring',
+      icon: '💎',
+      priority: 'medium'
     }
   ]
 
   const favoriteHousewives = [
-    { name: 'Kyle Richards', show: 'RHOBH', status: 'OG Queen', drama: 'Family splits' },
-    { name: 'Lisa Rinna', show: 'RHOBH', status: 'Chaos Agent', drama: 'Departed S12' },
-    { name: 'Heather Gay', show: 'RHOSLC', status: 'Truth Teller', drama: 'Black eye mystery' },
-    { name: 'Andy Cohen', show: 'Host', status: 'Daddy', drama: 'Stirring the pot' }
+    { name: 'Whitney Rose', show: 'RHOSLC', status: 'Chaos Creator', drama: 'Always stirring' },
+    { name: 'Mary M. Cosby', show: 'RHOSLC', status: 'Cult Leader Queen', drama: 'Iconic chaos' },
+    { name: 'Kyle Richards', show: 'RHOBH', status: 'OG Splits', drama: 'Family drama' },
+    { name: 'Traitors Cast', show: 'Traitors US', status: 'Mind Games', drama: 'Round table betrayals' }
   ]
 
   const getDramaColor = (score: number) => {

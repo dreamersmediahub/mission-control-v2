@@ -82,9 +82,9 @@ export function TheoCharacter() {
     },
     {
       id: '11',
-      message: "Kyle, mate... check those Real Housewives updates. I know you want to 👀",
+      message: "Kyle, mate... Whitney's stirring shit in Salt Lake again. Check your RHOSLC updates 👀",
       type: 'sassy',
-      emoji: '💅'
+      emoji: '⛷️'
     },
     {
       id: '12',
@@ -109,6 +109,24 @@ export function TheoCharacter() {
       message: "That creative energy hub is calling your name. Stop procrastinating and CREATE something!",
       type: 'tip',
       emoji: '🎨'
+    },
+    {
+      id: '16', 
+      message: "Someone's been betrayed in the castle! Traitors US drama levels are through the roof 🏰",
+      type: 'encouraging',
+      emoji: '🗡️'
+    },
+    {
+      id: '17',
+      message: "RHOBH serving Crystal clear drama! Kyle and Dorit's friendship is messier than your desk 💎",
+      type: 'sassy', 
+      emoji: '💎'
+    },
+    {
+      id: '18',
+      message: "Salt Lake City chaos level: Whitney. Need I say more? ⛷️ Check that drama tracker!",
+      type: 'celebration',
+      emoji: '🔥'
     }
   ]
 
