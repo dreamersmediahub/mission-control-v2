@@ -1,99 +1,69 @@
 import { createServerClient } from '@/lib/supabase'
-import type { FinancialEntry } from '@/types'
-import { DollarSign } from 'lucide-react'
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
 
 export default async function FinancesPage() {
   const supabase = createServerClient()
-  const { data } = await supabase
+  const { data: entries } = await supabase
     .from('financial_entries')
     .select('*')
-    .order('date', { ascending: false })
-    .limit(50)
-  const all: FinancialEntry[] = data ?? []
+    .order('created_at', { ascending: false })
+    .limit(100)
 
-  const income   = all.filter(e => e.type === 'income').reduce((s, e) => s + Number(e.amount), 0)
-  const expenses = all.filter(e => e.type === 'expense').reduce((s, e) => s + Number(e.amount), 0)
-  const net = income - expenses
-
-  const invoiceStatusColors: Record<string, string> = {
-    draft:   '#555',
-    sent:    '#60a5fa',
-    paid:    '#4ade80',
-    overdue: '#f87171',
-  }
+  const all = entries ?? []
+  const income = all.filter((e: any) => e.type === 'income').reduce((s: number, e: any) => s + (e.amount ?? 0), 0)
+  const expenses = all.filter((e: any) => e.type === 'expense').reduce((s: number, e: any) => s + (e.amount ?? 0), 0)
 
   return (
-    <div className="p-6 max-w-[1000px]">
-      <div className="mb-6">
-        <p className="text-[10px] font-bold tracking-[4px] uppercase text-[#fb923c] mb-1">FINANCIAL</p>
-        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-          <DollarSign size={22} className="text-[#fb923c]" /> Finances
-        </h1>
+    <div style={{ padding: '28px 32px', maxWidth: 1000, margin: '0 auto' }}>
+      <div style={{ marginBottom: 28 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 3, color: '#ffd700', textTransform: 'uppercase', marginBottom: 6 }}>Dreamers Media</div>
+        <h1 style={{ fontSize: 28, fontWeight: 800, color: '#fff', margin: 0 }}>Finances</h1>
+        <div style={{ color: '#555', fontSize: 13, marginTop: 4 }}>Revenue, invoices, and business pulse</div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 24 }}>
         {[
-          { label: 'Income',   value: income,   color: '#4ade80' },
-          { label: 'Expenses', value: expenses,  color: '#f87171' },
-          { label: 'Net',      value: net,       color: net >= 0 ? '#4ade80' : '#f87171' },
-        ].map(({ label, value, color }) => (
-          <div key={label} className="bg-[#111] border border-[#252525] rounded-xl p-4">
-            <p className="text-[11px] text-[#555] uppercase tracking-wider font-medium mb-1">{label}</p>
-            <p className="text-2xl font-bold font-mono" style={{ color }}>
-              {net < 0 && label === 'Net' ? '-' : ''}${Math.abs(value).toLocaleString('en-AU', { minimumFractionDigits: 2 })}
-            </p>
+          { label: 'Income (all time)', value: `£${income.toLocaleString()}`, color: '#4ade80' },
+          { label: 'Expenses (all time)', value: `£${expenses.toLocaleString()}`, color: '#f87171' },
+          { label: 'Net', value: `£${(income - expenses).toLocaleString()}`, color: income > expenses ? '#4ade80' : '#f87171' },
+        ].map(s => (
+          <div key={s.label} style={{ background: '#111', border: '1px solid #252525', borderRadius: 10, padding: '16px 20px' }}>
+            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#555', marginBottom: 8 }}>{s.label}</div>
+            <div style={{ fontSize: 28, fontWeight: 800, color: s.color }}>{s.value}</div>
           </div>
         ))}
       </div>
 
-      <div className="bg-[#111] border border-[#252525] rounded-xl overflow-hidden">
-        <div className="px-4 py-3 border-b border-[#252525]">
-          <p className="text-sm font-semibold text-white">Recent Entries</p>
+      {all.length === 0 ? (
+        <div style={{ background: '#111', border: '1px solid #252525', borderRadius: 12, padding: '40px 20px', textAlign: 'center', color: '#333', fontSize: 13 }}>
+          No financial entries yet. ops-arch and xero-worker will populate this when Xero credentials are fixed.
         </div>
-        {all.length === 0 ? (
-          <div className="p-8 text-center text-[#333] text-sm">No financial entries yet.</div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-[#1a1a1a]">
-                  {['Date', 'Description', 'Category', 'Client', 'Amount', 'Status'].map(h => (
-                    <th key={h} className="px-4 py-2.5 text-left text-[10px] font-semibold text-[#444] uppercase tracking-wider">{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {all.map(e => (
-                  <tr key={e.id} className="border-b border-[#0d0d0d] hover:bg-[#0d0d0d] transition-colors">
-                    <td className="px-4 py-2.5 text-xs text-[#555] font-mono">{e.date}</td>
-                    <td className="px-4 py-2.5 text-xs text-white">{e.description}</td>
-                    <td className="px-4 py-2.5 text-xs text-[#555]">{e.category ?? '—'}</td>
-                    <td className="px-4 py-2.5 text-xs text-[#555]">{e.client ?? '—'}</td>
-                    <td className="px-4 py-2.5 text-xs font-mono font-medium" style={{ color: e.type === 'income' ? '#4ade80' : '#f87171' }}>
-                      {e.type === 'income' ? '+' : '-'}${Number(e.amount).toLocaleString('en-AU', { minimumFractionDigits: 2 })}
-                    </td>
-                    <td className="px-4 py-2.5">
-                      {e.invoice_status && (
-                        <span
-                          className="text-[9px] px-1.5 py-0.5 rounded font-medium"
-                          style={{
-                            backgroundColor: (invoiceStatusColors[e.invoice_status] ?? '#555') + '20',
-                            color: invoiceStatusColors[e.invoice_status] ?? '#555',
-                          }}
-                        >
-                          {e.invoice_status}
-                        </span>
-                      )}
-                    </td>
-                  </tr>
+      ) : (
+        <div style={{ background: '#111', border: '1px solid #252525', borderRadius: 12, overflow: 'hidden' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+            <thead>
+              <tr style={{ background: '#0d0d0d' }}>
+                {['Date', 'Description', 'Type', 'Amount'].map(h => (
+                  <th key={h} style={{ textAlign: 'left', padding: '10px 16px', fontSize: 9, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#555', borderBottom: '1px solid #1a1a1a' }}>{h}</th>
                 ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+              </tr>
+            </thead>
+            <tbody>
+              {all.map((e: any) => (
+                <tr key={e.id} style={{ borderBottom: '1px solid #141414' }}>
+                  <td style={{ padding: '10px 16px', color: '#555', fontSize: 11 }}>{new Date(e.created_at).toLocaleDateString('en-IE')}</td>
+                  <td style={{ padding: '10px 16px', color: '#e2e2e2' }}>{e.description}</td>
+                  <td style={{ padding: '10px 16px' }}>
+                    <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 4, textTransform: 'uppercase', background: e.type === 'income' ? '#4ade8022' : '#f8717122', color: e.type === 'income' ? '#4ade80' : '#f87171', border: `1px solid ${e.type === 'income' ? '#4ade8044' : '#f8717144'}` }}>{e.type}</span>
+                  </td>
+                  <td style={{ padding: '10px 16px', fontWeight: 700, color: e.type === 'income' ? '#4ade80' : '#f87171' }}>£{(e.amount ?? 0).toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   )
 }

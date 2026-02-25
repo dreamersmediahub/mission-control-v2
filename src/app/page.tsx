@@ -1,41 +1,33 @@
 import { createServerClient } from '@/lib/supabase'
-import type { AgentStatus, Task, Memory, ContentItem } from '@/types'
-import { DashboardClient } from '@/components/dashboard/DashboardClient'
+import DashboardClient from '@/components/dashboard/DashboardClient'
+import type { AgentStatus, Task, Memory, AgentEvent, BrainDump } from '@/types/database'
 
-export const revalidate = 30
+export const dynamic = 'force-dynamic'
 
 export default async function DashboardPage() {
   const supabase = createServerClient()
 
-  const [
-    { data: agentsData },
-    { data: tasksData },
-    { data: memoriesData },
-    { data: contentData },
-  ] = await Promise.all([
-    supabase.from('agent_status').select('*').order('updated_at', { ascending: false }),
-    supabase.from('tasks').select('*').order('position'),
-    supabase.from('memories').select('*').order('created_at', { ascending: false }).limit(6),
-    supabase.from('content_items').select('*').order('position').limit(5),
+  const [agentsRes, tasksRes, memoriesRes, eventsRes, dumpsRes] = await Promise.all([
+    supabase.from('agent_status').select('*').order('status', { ascending: true }),
+    supabase.from('tasks').select('*').order('created_at', { ascending: false }),
+    supabase.from('memories').select('*').order('created_at', { ascending: false }).limit(10),
+    supabase.from('events').select('*').order('created_at', { ascending: false }).limit(50),
+    supabase.from('brain_dumps').select('*').order('created_at', { ascending: false }).limit(5),
   ])
 
-  const agents: AgentStatus[]   = agentsData ?? []
-  const tasks: Task[]           = tasksData ?? []
-  const memories: Memory[]      = memoriesData ?? []
-  const content: ContentItem[]  = contentData ?? []
-
-  const activeAgents = agents.filter(a => a.status === 'active').length
-  const totalAgents  = agents.length
-  const todayTasks   = tasks.filter(t => t.status !== 'done').length
-  const doneTasks    = tasks.filter(t => t.status === 'done').length
+  const agents: AgentStatus[] = agentsRes.data ?? []
+  const tasks: Task[] = tasksRes.data ?? []
+  const memories: Memory[] = memoriesRes.data ?? []
+  const events: AgentEvent[] = eventsRes.data ?? []
+  const brainDumps: BrainDump[] = dumpsRes.data ?? []
 
   return (
     <DashboardClient
       agents={agents}
       tasks={tasks}
       memories={memories}
-      content={content}
-      stats={{ activeAgents, totalAgents, todayTasks, doneTasks }}
+      events={events}
+      brainDumps={brainDumps}
     />
   )
 }

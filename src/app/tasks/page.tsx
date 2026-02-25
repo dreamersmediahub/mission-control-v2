@@ -1,10 +1,15 @@
 import { createServerClient } from '@/lib/supabase'
-import { TasksClient } from '@/components/tasks/TasksClient'
+import TasksClient from '@/components/tasks/TasksClient'
+import type { Task } from '@/types/database'
 
-export const revalidate = 15
+export const dynamic = 'force-dynamic'
 
 export default async function TasksPage() {
   const supabase = createServerClient()
-  const { data: tasks } = await supabase.from('tasks').select('*').order('position')
-  return <TasksClient tasks={tasks ?? []} />
+  const { data } = await supabase
+    .from('tasks')
+    .select('*')
+    .order('created_at', { ascending: false })
+  const tasks: Task[] = data ?? []
+  return <TasksClient tasks={tasks} />
 }

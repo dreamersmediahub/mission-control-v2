@@ -1,92 +1,119 @@
 import { createServerClient } from '@/lib/supabase'
-import type { Event } from '@/types'
-import { Calendar } from 'lucide-react'
+import type { CalendarEvent } from '@/types/database'
 
-export const revalidate = 60
-
-const typeColors: Record<string, string> = {
-  meeting:  '#60a5fa',
-  deadline: '#f87171',
-  health:   '#4ade80',
-  personal: '#c084fc',
-  content:  '#2dd4bf',
-}
+export const dynamic = 'force-dynamic'
 
 export default async function CalendarPage() {
   const supabase = createServerClient()
-  const now = new Date()
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
-  const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString()
-
   const { data } = await supabase
-    .from('events')
+    .from('calendar_events')
     .select('*')
-    .gte('start_time', startOfMonth)
-    .lte('start_time', endOfMonth)
     .order('start_time')
-  const all: Event[] = data ?? []
 
-  const byDate: Record<string, Event[]> = {}
-  all.forEach(e => {
-    const d = e.start_time.split('T')[0]
-    if (!byDate[d]) byDate[d] = []
-    byDate[d].push(e)
+  const events: CalendarEvent[] = data ?? []
+  const now = new Date()
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
+  const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0)
+  const daysInMonth = monthEnd.getDate()
+  const firstDayOfWeek = monthStart.getDay()
+  const today = now.getDate()
+
+  const TYPE_COLORS: Record<string, string> = {
+    cron: '#60a5fa', content: '#c084fc', task: '#ffd700', personal: '#4ade80', meeting: '#fb923c', event: '#555'
+  }
+
+  const eventsByDay = new Map<number, CalendarEvent[]>()
+  events.forEach(e => {
+    const d = new Date(e.start_time)
+    if (d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()) {
+      const day = d.getDate()
+      if (!eventsByDay.has(day)) eventsByDay.set(day, [])
+      eventsByDay.get(day)!.push(e)
+    }
   })
 
-  const today = now.toISOString().split('T')[0]
+  const cells = Array.from({ length: 42 }, (_, i) => {
+    const day = i - firstDayOfWeek + 1
+    return day >= 1 && day <= daysInMonth ? day : null
+  })
 
   return (
-    <div className="p-6 max-w-[900px]">
-      <div className="mb-6">
-        <p className="text-[10px] font-bold tracking-[4px] uppercase text-[#60a5fa] mb-1">SCHEDULE</p>
-        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-          <Calendar size={22} className="text-[#60a5fa]" /> Calendar
-        </h1>
-        <p className="text-[#555] text-sm mt-0.5">
-          {now.toLocaleDateString('en-AU', { month: 'long', year: 'numeric' })} · {all.length} events
-        </p>
+    <div style={{ padding: '28px 32px', maxWidth: 1000, margin: '0 auto' }}>
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 3, color: '#ffd700', textTransform: 'uppercase', marginBottom: 6 }}>Dreamers Media</div>
+        <h1 style={{ fontSize: 28, fontWeight: 800, color: '#fff', margin: 0 }}>Calendar</h1>
+        <div style={{ color: '#555', fontSize: 13, marginTop: 4 }}>
+          {now.toLocaleDateString('en-IE', { month: 'long', year: 'numeric' })} · {events.length} events this month
+        </div>
       </div>
 
-      {Object.keys(byDate).length === 0 ? (
-        <div className="bg-[#111] border border-[#252525] rounded-xl p-8 text-center">
-          <p className="text-[#333] text-sm">No events this month.</p>
-          <p className="text-[#222] text-xs mt-1">Add events to the events table, or wire up your calendar agent.</p>
+      {/* Legend */}
+      <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
+        {Object.entries(TYPE_COLORS).map(([type, color]) => (
+          <div key={type} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+            <div style={{ width: 8, height: 8, borderRadius: 2, background: color }} />
+            <span style={{ fontSize: 10, color: '#555', textTransform: 'capitalize' }}>{type}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Calendar grid */}
+      <div style={{ background: '#111', border: '1px solid #252525', borderRadius: 12, overflow: 'hidden' }}>
+        {/* Day headers */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', borderBottom: '1px solid #1a1a1a' }}>
+          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => (
+            <div key={d} style={{ padding: '10px', textAlign: 'center', fontSize: 9, fontWeight: 700, color: '#444', textTransform: 'uppercase', letterSpacing: 1 }}>{d}</div>
+          ))}
         </div>
-      ) : (
-        <div className="space-y-4">
-          {Object.entries(byDate).map(([date, dayEvents]) => {
-            const isToday = date === today
+        {/* Weeks */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)' }}>
+          {cells.map((day, i) => {
+            const evs = day ? (eventsByDay.get(day) ?? []) : []
+            const isToday = day === today
             return (
-              <div key={date} className={`bg-[#111] border rounded-xl overflow-hidden ${isToday ? 'border-[#ffd700]/30' : 'border-[#252525]'}`}>
-                <div className={`px-4 py-2.5 border-b flex items-center justify-between ${isToday ? 'border-[#ffd700]/20 bg-[#ffd700]/5' : 'border-[#1a1a1a]'}`}>
-                  <p className={`text-xs font-semibold ${isToday ? 'text-[#ffd700]' : 'text-white'}`}>
-                    {new Date(date + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'long', month: 'long', day: 'numeric' })}
-                    {isToday && <span className="ml-2 text-[9px] font-bold text-[#ffd700] uppercase tracking-wider">Today</span>}
-                  </p>
-                  <span className="text-[10px] text-[#444]">{dayEvents.length}</span>
-                </div>
-                <div className="p-3 space-y-2">
-                  {dayEvents.map(event => (
-                    <div key={event.id} className="flex items-center gap-3 p-3 bg-[#0d0d0d] rounded-lg border border-[#1a1a1a]">
-                      <div className="w-1 self-stretch rounded-full" style={{ backgroundColor: typeColors[event.type] ?? '#555' }} />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-white">{event.title}</p>
-                        {event.description && <p className="text-xs text-[#555] mt-0.5">{event.description}</p>}
-                      </div>
-                      <div className="text-right shrink-0">
-                        {event.all_day ? (
-                          <span className="text-[10px] text-[#444]">All day</span>
-                        ) : (
-                          <p className="text-xs text-[#aaa]">{new Date(event.start_time).toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' })}</p>
-                        )}
-                        <p className="text-[9px] font-medium capitalize mt-0.5" style={{ color: typeColors[event.type] ?? '#555' }}>{event.type}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+              <div
+                key={i}
+                style={{
+                  minHeight: 80, padding: '8px 6px', borderRight: '1px solid #141414',
+                  borderBottom: '1px solid #141414',
+                  background: isToday ? '#ffd70008' : 'transparent',
+                }}
+              >
+                {day && (
+                  <>
+                    <div style={{
+                      fontSize: 12, fontWeight: isToday ? 800 : 400,
+                      color: isToday ? '#ffd700' : day ? '#555' : '#222',
+                      marginBottom: 4,
+                      width: 22, height: 22, borderRadius: '50%',
+                      background: isToday ? '#ffd70022' : 'transparent',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      border: isToday ? '1px solid #ffd70066' : 'none',
+                    }}>{day}</div>
+                    {evs.slice(0, 3).map(ev => (
+                      <div
+                        key={ev.id}
+                        style={{
+                          fontSize: 9, fontWeight: 600, padding: '2px 5px', borderRadius: 3,
+                          background: `${TYPE_COLORS[ev.type] ?? '#555'}22`,
+                          color: TYPE_COLORS[ev.type] ?? '#555',
+                          marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                          border: `1px solid ${TYPE_COLORS[ev.type] ?? '#555'}33`,
+                        }}
+                      >{ev.title}</div>
+                    ))}
+                    {evs.length > 3 && <div style={{ fontSize: 9, color: '#444' }}>+{evs.length - 3} more</div>}
+                  </>
+                )}
               </div>
             )
           })}
+        </div>
+      </div>
+
+      {events.length === 0 && (
+        <div style={{ textAlign: 'center', color: '#333', fontSize: 13, marginTop: 20 }}>
+          No calendar events yet. Agents will populate this with cron jobs and content schedules.
         </div>
       )}
     </div>

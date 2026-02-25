@@ -1,70 +1,75 @@
 'use client'
+
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import {
-  LayoutDashboard, Bot, CheckSquare, FileText,
-  DollarSign, Calendar, Heart, Zap
-} from 'lucide-react'
 
-const navItems = [
-  { href: '/',          label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/agents',    label: 'Office',    icon: Bot },
-  { href: '/tasks',     label: 'Tasks',     icon: CheckSquare },
-  { href: '/content',   label: 'Content',   icon: FileText },
-  { href: '/memory',    label: 'Memory',    icon: Zap },
-  { href: '/finances',  label: 'Finances',  icon: DollarSign },
-  { href: '/calendar',  label: 'Calendar',  icon: Calendar },
-  { href: '/health',    label: 'Health',    icon: Heart },
+const NAV = [
+  { href: '/', label: 'Dashboard', icon: '🏠' },
+  { href: '/agents', label: 'The Office', icon: '🏢' },
+  { href: '/tasks', label: 'Tasks', icon: '✅' },
+  { href: '/memory', label: 'Memory', icon: '🧠' },
+  { href: '/content', label: 'Content', icon: '🎬' },
+  { href: '/calendar', label: 'Calendar', icon: '📅' },
+  { href: '/finances', label: 'Finances', icon: '💰' },
+  { href: '/health', label: 'Health', icon: '💊' },
+  { href: '/personal', label: 'Personal', icon: '✨' },
 ]
 
-export function Sidebar() {
+export default function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="fixed left-0 top-0 h-full w-[220px] bg-[#111111] border-r border-[#252525] flex flex-col z-50">
+    <aside style={{
+      position: 'fixed', left: 0, top: 0, bottom: 0, width: 220,
+      background: '#080808', borderRight: '1px solid #181818',
+      display: 'flex', flexDirection: 'column', zIndex: 50,
+    }}>
       {/* Logo */}
-      <div className="p-5 border-b border-[#252525]">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-[#ffd700] flex items-center justify-center">
-            <span className="text-[#0a0a0a] font-black text-sm">D</span>
-          </div>
-          <div>
-            <p className="text-white font-bold text-sm leading-none">Mission Control</p>
-            <p className="text-[#555] text-[10px] mt-0.5">Dreamers Media</p>
-          </div>
-        </div>
+      <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid #141414' }}>
+        <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 3, color: '#ffd70066', textTransform: 'uppercase', marginBottom: 4 }}>Dreamers Media</div>
+        <div style={{ fontSize: 15, fontWeight: 800, color: '#fff', letterSpacing: -0.5 }}>Mission Control</div>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 p-3 space-y-0.5">
-        {navItems.map(({ href, label, icon: Icon }) => {
-          const active = pathname === href || (href !== '/' && pathname.startsWith(href))
+      <nav style={{ flex: 1, padding: '12px 10px', overflowY: 'auto' }}>
+        {NAV.map(item => {
+          const active = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href)
           return (
             <Link
-              key={href}
-              href={href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all ${
-                active
-                  ? 'bg-[#ffd700]/10 text-[#ffd700] border border-[#ffd700]/20'
-                  : 'text-[#777] hover:text-[#e2e2e2] hover:bg-[#181818] border border-transparent'
-              }`}
+              key={item.href}
+              href={item.href}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 10,
+                padding: '8px 12px', borderRadius: 8,
+                marginBottom: 2,
+                background: active ? '#ffd70015' : 'transparent',
+                border: `1px solid ${active ? '#ffd70033' : 'transparent'}`,
+                color: active ? '#ffd700' : '#555',
+                fontWeight: active ? 700 : 400,
+                fontSize: 13, textDecoration: 'none',
+                transition: 'all 0.12s',
+              }}
             >
-              <Icon size={15} strokeWidth={active ? 2.5 : 1.5} />
-              {label}
+              <span style={{ fontSize: 15, width: 20, textAlign: 'center' }}>{item.icon}</span>
+              <span>{item.label}</span>
+              {active && <span style={{ marginLeft: 'auto', width: 4, height: 4, borderRadius: '50%', background: '#ffd700' }} />}
             </Link>
           )
         })}
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t border-[#252525]">
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-full bg-[#252525] flex items-center justify-center">
-            <span className="text-[10px] text-[#ffd700] font-bold">K</span>
-          </div>
+      <div style={{ padding: '14px 20px', borderTop: '1px solid #141414' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{
+            width: 30, height: 30, borderRadius: 8,
+            background: 'linear-gradient(135deg, #ffd700, #ff8c00)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 12, fontWeight: 800, color: '#000', flexShrink: 0,
+          }}>K</div>
           <div>
-            <p className="text-[11px] text-white font-medium">Kyle</p>
-            <p className="text-[10px] text-[#555]">Dreamers Media</p>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#e2e2e2' }}>Kyle</div>
+            <div style={{ fontSize: 10, color: '#555' }}>support@dreamersmedia.co</div>
           </div>
         </div>
       </div>

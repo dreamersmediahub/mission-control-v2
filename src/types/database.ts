@@ -1,21 +1,19 @@
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
-
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       agent_status: {
         Row: {
           agent_id: string
           name: string
-          status: 'active' | 'idle' | 'offline' | 'error'
+          role: string | null
+          status: 'active' | 'idle' | 'offline'
           current_task: string | null
           model: string | null
           last_seen: string | null
           sessions_today: number
-          tokens_used: number
           updated_at: string
         }
-        Insert: Omit<Database['public']['Tables']['agent_status']['Row'], 'updated_at'> & { updated_at?: string }
+        Insert: Omit<Database['public']['Tables']['agent_status']['Row'], 'updated_at'>
         Update: Partial<Database['public']['Tables']['agent_status']['Row']>
       }
       tasks: {
@@ -25,13 +23,15 @@ export interface Database {
           updated_at: string
           title: string
           description: string | null
-          status: 'todo' | 'in_progress' | 'blocked' | 'done'
-          priority: 'urgent' | 'high' | 'medium' | 'low'
           assignee: string
-          source_agent: string | null
+          status: 'inbox' | 'assigned' | 'in_progress' | 'review' | 'done'
+          priority: 'urgent' | 'high' | 'medium' | 'low'
+          project: string | null
           due_date: string | null
-          tags: string[] | null
-          position: number
+          original_request: string | null
+          skill_prompt: string | null
+          source_agent: string | null
+          completed_at: string | null
         }
         Insert: Omit<Database['public']['Tables']['tasks']['Row'], 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Database['public']['Tables']['tasks']['Row']>
@@ -46,82 +46,109 @@ export interface Database {
           agent_name: string | null
         }
         Insert: Omit<Database['public']['Tables']['memories']['Row'], 'id' | 'created_at'>
-        Update: Partial<Omit<Database['public']['Tables']['memories']['Row'], 'id'>>
+        Update: Partial<Database['public']['Tables']['memories']['Row']>
       }
-      content_items: {
+      brain_dumps: {
         Row: {
           id: string
           created_at: string
-          updated_at: string
-          title: string
-          type: 'youtube' | 'short' | 'post' | 'email' | 'podcast'
-          status: 'idea' | 'scripted' | 'filmed' | 'edited' | 'published'
-          platform: string | null
-          script: string | null
-          thumbnail_url: string | null
-          publish_date: string | null
-          views: number
-          assignee: string | null
-          source_agent: string | null
-          tags: string[] | null
-          position: number
+          content: string
+          tag: 'idea' | 'task' | 'note' | 'feeling'
+          processed: boolean
+          notion_synced: boolean
         }
-        Insert: Omit<Database['public']['Tables']['content_items']['Row'], 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Database['public']['Tables']['content_items']['Row']>
+        Insert: Omit<Database['public']['Tables']['brain_dumps']['Row'], 'id' | 'created_at'>
+        Update: Partial<Database['public']['Tables']['brain_dumps']['Row']>
       }
       events: {
         Row: {
           id: string
           created_at: string
-          title: string
-          start_time: string
-          end_time: string | null
-          type: 'meeting' | 'deadline' | 'health' | 'personal' | 'content'
-          description: string | null
-          all_day: boolean
+          agent_id: string
+          agent_name: string | null
+          type: string
+          detail: string | null
+          task_id: string | null
+          metadata: Record<string, unknown> | null
         }
         Insert: Omit<Database['public']['Tables']['events']['Row'], 'id' | 'created_at'>
         Update: Partial<Database['public']['Tables']['events']['Row']>
       }
-      financial_entries: {
+      content: {
         Row: {
           id: string
           created_at: string
-          date: string
-          description: string
-          amount: number
-          type: 'income' | 'expense'
-          category: string | null
-          client: string | null
-          invoice_status: 'draft' | 'sent' | 'paid' | 'overdue' | null
+          updated_at: string
+          title: string
+          platform: string | null
+          stage: 'idea' | 'research' | 'script' | 'thumbnail' | 'filming' | 'editing' | 'published'
+          script: string | null
+          thumbnail_url: string | null
+          publish_date: string | null
+          assigned_agent: string | null
+          notes: string | null
+          rss_guid: string | null
         }
-        Insert: Omit<Database['public']['Tables']['financial_entries']['Row'], 'id' | 'created_at'>
-        Update: Partial<Database['public']['Tables']['financial_entries']['Row']>
+        Insert: Omit<Database['public']['Tables']['content']['Row'], 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Database['public']['Tables']['content']['Row']>
       }
       health_logs: {
         Row: {
           id: string
-          created_at: string
           date: string
-          type: 'injection' | 'medication' | 'supplement' | 'mood' | 'energy' | 'sleep' | 'exercise'
-          name: string
-          dose: string | null
+          injections: Record<string, boolean> | null
+          supplements: Record<string, boolean> | null
+          energy_rating: number | null
+          gym_done: boolean
+          weight_kg: number | null
+          sleep_quality: number | null
           notes: string | null
-          value: number | null
-          unit: string | null
         }
-        Insert: Omit<Database['public']['Tables']['health_logs']['Row'], 'id' | 'created_at'>
+        Insert: Omit<Database['public']['Tables']['health_logs']['Row'], 'id'>
         Update: Partial<Database['public']['Tables']['health_logs']['Row']>
+      }
+      calendar_events: {
+        Row: {
+          id: string
+          created_at: string
+          title: string
+          description: string | null
+          start_time: string
+          end_time: string | null
+          type: string
+          all_day: boolean
+          color: string | null
+          agent_id: string | null
+          recurrence: string | null
+        }
+        Insert: Omit<Database['public']['Tables']['calendar_events']['Row'], 'id' | 'created_at'>
+        Update: Partial<Database['public']['Tables']['calendar_events']['Row']>
+      }
+      agent_messages: {
+        Row: {
+          id: string
+          created_at: string
+          from_agent_id: string
+          from_agent_name: string | null
+          to_agent_id: string | null
+          to_agent_name: string | null
+          message: string | null
+          session_id: string | null
+          type: string
+        }
+        Insert: Omit<Database['public']['Tables']['agent_messages']['Row'], 'id' | 'created_at'>
+        Update: Partial<Database['public']['Tables']['agent_messages']['Row']>
       }
     }
   }
 }
 
-// Convenience row types
 export type AgentStatus = Database['public']['Tables']['agent_status']['Row']
 export type Task = Database['public']['Tables']['tasks']['Row']
 export type Memory = Database['public']['Tables']['memories']['Row']
-export type ContentItem = Database['public']['Tables']['content_items']['Row']
-export type Event = Database['public']['Tables']['events']['Row']
-export type FinancialEntry = Database['public']['Tables']['financial_entries']['Row']
+export type BrainDump = Database['public']['Tables']['brain_dumps']['Row']
+export type AgentEvent = Database['public']['Tables']['events']['Row']
+export type ContentItem = Database['public']['Tables']['content']['Row']
 export type HealthLog = Database['public']['Tables']['health_logs']['Row']
+export type CalendarEvent = Database['public']['Tables']['calendar_events']['Row']
+export type AgentMessage = Database['public']['Tables']['agent_messages']['Row']
