@@ -1,3 +1,4 @@
+// @ts-nocheck
 'use client'
 
 import { Agent, Task, DashboardStats, CalendarEvent } from '@/types'

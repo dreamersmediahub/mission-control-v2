@@ -1,4 +1,5 @@
 import { createServerClient } from '@/lib/supabase'
+import type { HealthLog } from '@/types'
 import { Heart } from 'lucide-react'
 
 export const revalidate = 60
@@ -15,16 +16,15 @@ const typeColors: Record<string, string> = {
 
 export default async function HealthPage() {
   const supabase = createServerClient()
-  const { data: logs } = await supabase
+  const { data } = await supabase
     .from('health_logs')
     .select('*')
     .order('date', { ascending: false })
     .order('created_at', { ascending: false })
     .limit(100)
-  const all = logs ?? []
+  const all: HealthLog[] = data ?? []
 
-  // Group by date
-  const byDate: Record<string, typeof all> = {}
+  const byDate: Record<string, HealthLog[]> = {}
   all.forEach(log => {
     if (!byDate[log.date]) byDate[log.date] = []
     byDate[log.date].push(log)
@@ -40,7 +40,6 @@ export default async function HealthPage() {
         <p className="text-[#555] text-sm mt-0.5">GHK-Cu · KPV · Reta · Dexamphetamine</p>
       </div>
 
-      {/* Type legend */}
       <div className="flex flex-wrap gap-2 mb-5">
         {Object.entries(typeColors).map(([type, color]) => (
           <div key={type} className="flex items-center gap-1.5 px-2 py-1 bg-[#111] border border-[#1a1a1a] rounded-lg">
@@ -53,7 +52,7 @@ export default async function HealthPage() {
       {Object.keys(byDate).length === 0 ? (
         <div className="bg-[#111] border border-[#252525] rounded-xl p-8 text-center">
           <p className="text-[#333] text-sm">No health logs yet.</p>
-          <p className="text-[#222] text-xs mt-1">Add entries directly to the health_logs table, or wire up your health agent.</p>
+          <p className="text-[#222] text-xs mt-1">Add entries to the health_logs table, or wire up your health agent.</p>
         </div>
       ) : (
         <div className="space-y-4">

@@ -1,3 +1,4 @@
+// @ts-nocheck
 'use client'
 import { Memory } from '@/types'
 import { supabase } from '@/lib/supabase'

@@ -1,16 +1,17 @@
 import { createServerClient } from '@/lib/supabase'
+import type { FinancialEntry } from '@/types'
 import { DollarSign } from 'lucide-react'
 
 export const revalidate = 60
 
 export default async function FinancesPage() {
   const supabase = createServerClient()
-  const { data: entries } = await supabase
+  const { data } = await supabase
     .from('financial_entries')
     .select('*')
     .order('date', { ascending: false })
     .limit(50)
-  const all = entries ?? []
+  const all: FinancialEntry[] = data ?? []
 
   const income   = all.filter(e => e.type === 'income').reduce((s, e) => s + Number(e.amount), 0)
   const expenses = all.filter(e => e.type === 'expense').reduce((s, e) => s + Number(e.amount), 0)

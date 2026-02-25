@@ -1,4 +1,5 @@
 import { createServerClient } from '@/lib/supabase'
+import type { Event } from '@/types'
 import { Calendar } from 'lucide-react'
 
 export const revalidate = 60
@@ -17,16 +18,15 @@ export default async function CalendarPage() {
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
   const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString()
 
-  const { data: events } = await supabase
+  const { data } = await supabase
     .from('events')
     .select('*')
     .gte('start_time', startOfMonth)
     .lte('start_time', endOfMonth)
     .order('start_time')
-  const all = events ?? []
+  const all: Event[] = data ?? []
 
-  // Group by date
-  const byDate: Record<string, typeof all> = {}
+  const byDate: Record<string, Event[]> = {}
   all.forEach(e => {
     const d = e.start_time.split('T')[0]
     if (!byDate[d]) byDate[d] = []

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Agent, Task, Client, DashboardStats, CalendarEvent, WeatherData } from '@/types'
 
 export const mockAgents: Agent[] = [

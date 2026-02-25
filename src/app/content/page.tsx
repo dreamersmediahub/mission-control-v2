@@ -1,4 +1,5 @@
 import { createServerClient } from '@/lib/supabase'
+import type { ContentItem } from '@/types'
 import { FileText } from 'lucide-react'
 
 export const revalidate = 30
@@ -13,8 +14,8 @@ const colColors: Record<string, string> = {
 
 export default async function ContentPage() {
   const supabase = createServerClient()
-  const { data: items } = await supabase.from('content_items').select('*').order('position')
-  const all = items ?? []
+  const { data } = await supabase.from('content_items').select('*').order('position')
+  const all: ContentItem[] = data ?? []
   const columns = ['idea', 'scripted', 'filmed', 'edited', 'published']
 
   return (

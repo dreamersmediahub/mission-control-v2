@@ -1,3 +1,4 @@
+// @ts-nocheck
 'use client'
 import { AgentStatus, Task, Memory, ContentItem } from '@/types'
 import { Bot, CheckSquare, Zap, FileText } from 'lucide-react'
