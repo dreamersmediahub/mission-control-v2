@@ -1,182 +1,98 @@
-'use client'
+import { createServerClient } from '@/lib/supabase'
+import { DollarSign } from 'lucide-react'
 
-import { Layout } from '@/components/Layout'
-import { formatCurrency } from '@/lib/utils'
-import { TrendingUp, DollarSign, CreditCard, AlertCircle, Calendar } from 'lucide-react'
+export const revalidate = 60
 
-export default function FinancesPage() {
-  // Mock financial data based on Kyle's actual clients
-  const outstandingInvoices = [
-    {
-      id: '1',
-      client: 'Krissy Marsh',
-      amount: 3500,
-      dueDate: new Date('2026-02-20'),
-      overdue: true,
-      invoiceNumber: 'DMINV-0047'
-    },
-    {
-      id: '2',
-      client: 'Chicken and Chips',
-      amount: 1200,
-      dueDate: new Date('2026-02-28'),
-      overdue: false,
-      invoiceNumber: 'DMINV-0048'
-    }
-  ]
+export default async function FinancesPage() {
+  const supabase = createServerClient()
+  const { data: entries } = await supabase
+    .from('financial_entries')
+    .select('*')
+    .order('date', { ascending: false })
+    .limit(50)
+  const all = entries ?? []
 
-  const monthlyStats = {
-    revenue: 8200,
-    expenses: 3400,
-    profit: 4800,
-    outstandingTotal: 4700
+  const income   = all.filter(e => e.type === 'income').reduce((s, e) => s + Number(e.amount), 0)
+  const expenses = all.filter(e => e.type === 'expense').reduce((s, e) => s + Number(e.amount), 0)
+  const net = income - expenses
+
+  const invoiceStatusColors: Record<string, string> = {
+    draft:   '#555',
+    sent:    '#60a5fa',
+    paid:    '#4ade80',
+    overdue: '#f87171',
   }
 
   return (
-    <Layout>
-      <div className="p-6">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-text-primary mb-2">Financial Command Center</h1>
-          <p className="text-text-secondary">Making money management mechanical, not emotional</p>
-        </div>
-
-        {/* Financial Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="card">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-text-secondary text-sm font-medium">Monthly Revenue</p>
-                <p className="text-2xl font-bold text-success mt-1">
-                  {formatCurrency(monthlyStats.revenue)}
-                </p>
-                <p className="text-xs text-success mt-1">↗ +12% from last month</p>
-              </div>
-              <TrendingUp className="text-success" size={32} />
-            </div>
-          </div>
-
-          <div className="card">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-text-secondary text-sm font-medium">Outstanding</p>
-                <p className="text-2xl font-bold text-warning mt-1">
-                  {formatCurrency(monthlyStats.outstandingTotal)}
-                </p>
-                <p className="text-xs text-warning mt-1">2 invoices pending</p>
-              </div>
-              <DollarSign className="text-warning" size={32} />
-            </div>
-          </div>
-
-          <div className="card">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-text-secondary text-sm font-medium">Monthly Profit</p>
-                <p className="text-2xl font-bold text-text-primary mt-1">
-                  {formatCurrency(monthlyStats.profit)}
-                </p>
-                <p className="text-xs text-info mt-1">58% profit margin</p>
-              </div>
-              <CreditCard className="text-info" size={32} />
-            </div>
-          </div>
-
-          <div className="card">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-text-secondary text-sm font-medium">Expenses</p>
-                <p className="text-2xl font-bold text-text-primary mt-1">
-                  {formatCurrency(monthlyStats.expenses)}
-                </p>
-                <p className="text-xs text-text-muted mt-1">Subscriptions & tools</p>
-              </div>
-              <AlertCircle className="text-text-muted" size={32} />
-            </div>
-          </div>
-        </div>
-
-        {/* Outstanding Invoices */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="card">
-            <h3 className="text-lg font-semibold text-text-primary mb-4">Outstanding Invoices</h3>
-            <div className="space-y-3">
-              {outstandingInvoices.map((invoice) => (
-                <div key={invoice.id} className="p-4 rounded-lg bg-surface/30 border border-surface-hover">
-                  <div className="flex items-center justify-between mb-2">
-                    <div>
-                      <h4 className="font-medium text-text-primary">{invoice.client}</h4>
-                      <p className="text-sm text-text-muted">{invoice.invoiceNumber}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-lg font-bold text-text-primary">
-                        {formatCurrency(invoice.amount)}
-                      </p>
-                      <div className={`text-xs px-2 py-1 rounded-full ${
-                        invoice.overdue 
-                          ? 'bg-error/20 text-error' 
-                          : 'bg-warning/20 text-warning'
-                      }`}>
-                        {invoice.overdue ? 'OVERDUE' : 'PENDING'}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center space-x-1 text-text-muted">
-                      <Calendar size={12} />
-                      <span>Due {invoice.dueDate.toLocaleDateString('en-AU')}</span>
-                    </div>
-                    <button className="btn-primary text-xs px-3 py-1">
-                      Send Reminder
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Quick Actions */}
-          <div className="card">
-            <h3 className="text-lg font-semibold text-text-primary mb-4">Quick Actions</h3>
-            <div className="space-y-3">
-              <button className="w-full btn-primary flex items-center justify-center space-x-2">
-                <DollarSign size={16} />
-                <span>Create New Invoice</span>
-              </button>
-              <button className="w-full btn-secondary flex items-center justify-center space-x-2">
-                <AlertCircle size={16} />
-                <span>Chase All Overdue</span>
-              </button>
-              <button className="w-full btn-secondary flex items-center justify-center space-x-2">
-                <TrendingUp size={16} />
-                <span>Monthly Report</span>
-              </button>
-            </div>
-
-            {/* Subscription Audit Preview */}
-            <div className="mt-6 pt-4 border-t border-surface-hover">
-              <h4 className="font-medium text-text-primary mb-2">Subscription Audit</h4>
-              <div className="text-sm text-text-secondary space-y-1">
-                <div className="flex justify-between">
-                  <span>Adobe CC</span>
-                  <span className="text-text-primary">$59.99/mo</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>LucidLink</span>
-                  <span className="text-text-primary">$115/mo</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Notion Pro</span>
-                  <span className="text-text-primary">$12/mo</span>
-                </div>
-              </div>
-              <button className="w-full mt-3 btn-secondary text-sm">
-                Full Audit Report
-              </button>
-            </div>
-          </div>
-        </div>
+    <div className="p-6 max-w-[1000px]">
+      <div className="mb-6">
+        <p className="text-[10px] font-bold tracking-[4px] uppercase text-[#fb923c] mb-1">FINANCIAL</p>
+        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <DollarSign size={22} className="text-[#fb923c]" /> Finances
+        </h1>
       </div>
-    </Layout>
+
+      <div className="grid grid-cols-3 gap-4 mb-6">
+        {[
+          { label: 'Income',   value: income,   color: '#4ade80' },
+          { label: 'Expenses', value: expenses,  color: '#f87171' },
+          { label: 'Net',      value: net,       color: net >= 0 ? '#4ade80' : '#f87171' },
+        ].map(({ label, value, color }) => (
+          <div key={label} className="bg-[#111] border border-[#252525] rounded-xl p-4">
+            <p className="text-[11px] text-[#555] uppercase tracking-wider font-medium mb-1">{label}</p>
+            <p className="text-2xl font-bold font-mono" style={{ color }}>
+              {net < 0 && label === 'Net' ? '-' : ''}${Math.abs(value).toLocaleString('en-AU', { minimumFractionDigits: 2 })}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <div className="bg-[#111] border border-[#252525] rounded-xl overflow-hidden">
+        <div className="px-4 py-3 border-b border-[#252525]">
+          <p className="text-sm font-semibold text-white">Recent Entries</p>
+        </div>
+        {all.length === 0 ? (
+          <div className="p-8 text-center text-[#333] text-sm">No financial entries yet.</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-[#1a1a1a]">
+                  {['Date', 'Description', 'Category', 'Client', 'Amount', 'Status'].map(h => (
+                    <th key={h} className="px-4 py-2.5 text-left text-[10px] font-semibold text-[#444] uppercase tracking-wider">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {all.map(e => (
+                  <tr key={e.id} className="border-b border-[#0d0d0d] hover:bg-[#0d0d0d] transition-colors">
+                    <td className="px-4 py-2.5 text-xs text-[#555] font-mono">{e.date}</td>
+                    <td className="px-4 py-2.5 text-xs text-white">{e.description}</td>
+                    <td className="px-4 py-2.5 text-xs text-[#555]">{e.category ?? '—'}</td>
+                    <td className="px-4 py-2.5 text-xs text-[#555]">{e.client ?? '—'}</td>
+                    <td className="px-4 py-2.5 text-xs font-mono font-medium" style={{ color: e.type === 'income' ? '#4ade80' : '#f87171' }}>
+                      {e.type === 'income' ? '+' : '-'}${Number(e.amount).toLocaleString('en-AU', { minimumFractionDigits: 2 })}
+                    </td>
+                    <td className="px-4 py-2.5">
+                      {e.invoice_status && (
+                        <span
+                          className="text-[9px] px-1.5 py-0.5 rounded font-medium"
+                          style={{
+                            backgroundColor: (invoiceStatusColors[e.invoice_status] ?? '#555') + '20',
+                            color: invoiceStatusColors[e.invoice_status] ?? '#555',
+                          }}
+                        >
+                          {e.invoice_status}
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
   )
 }
